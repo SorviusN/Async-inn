@@ -3,7 +3,7 @@
 ### Name: Jona Brown
 ### Date: 07/26/2021
 ## Summary
-The Async Inn is an Entity Relationship Diagram for a hotel.
+The Async Inn is an API that represents all Hotels in the Async name, including the rooms and the amenities for each for each of the rooms. These are all turned into JSON data, in which you are able to PUT, POST, GET and DELETE new hotels, rooms and amenities inside of the API.
 
 ![ERD](./ERD.png)
 
