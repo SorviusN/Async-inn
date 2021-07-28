@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncProject.Migrations
 {
-    [DbContext(typeof(SchoolDbContext))]
+    [DbContext(typeof(AsyncInnDbContext))]
     [Migration("20210728005653_AddedStudentTable")]
     partial class AddedStudentTable
     {

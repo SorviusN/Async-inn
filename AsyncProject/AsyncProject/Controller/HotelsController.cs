@@ -12,47 +12,47 @@ namespace AsyncProject.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class HotelsController : ControllerBase
     {
         private readonly AsyncInnDbContext _context;
 
-        public StudentsController(AsyncInnDbContext context)
+        public HotelsController(AsyncInnDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Students
+        // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Hotel.ToListAsync();
         }
 
-        // GET: api/Students/5
+        // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var hotel = await _context.Hotel.FindAsync(id);
 
-            if (student == null)
+            if (hotel == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return hotel;
         }
 
-        // PUT: api/Students/5
+        // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(int id, Student student)
+        public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
-            if (id != student.Id)
+            if (id != hotel.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            _context.Entry(hotel).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace AsyncProject.Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(id))
+                if (!HotelExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace AsyncProject.Controller
             return NoContent();
         }
 
-        // POST: api/Students
+        // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
-            _context.Students.Add(student);
+            _context.Hotel.Add(hotel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
 
-        // DELETE: api/Students/5
+        // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteHotel(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            var hotel = await _context.Hotel.FindAsync(id);
+            if (hotel == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
+            _context.Hotel.Remove(hotel);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool StudentExists(int id)
+        private bool HotelExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Hotel.Any(e => e.Id == id);
         }
     }
 }
