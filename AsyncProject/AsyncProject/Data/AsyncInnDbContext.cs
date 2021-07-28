@@ -12,14 +12,16 @@ namespace AsyncProject.Data
         public DbSet<Student> Students { get; set; }
         public AsyncInnDbContext(DbContextOptions options) : base(options)
         {
-
         }
+        public DbSet<Hotel> Hotel { get; set; }
 
+        public DbSet<Room> Room { get; set; }
+
+        public DbSet<Amenity> Amenity { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // This call the base method, but does nothing.
             // base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
                 {
@@ -31,9 +33,7 @@ namespace AsyncProject.Data
                     Country = "USA",
                     Phone = "859-225-0283"
                 }
-                ); 
+            );
         }
-
-        public DbSet<AsyncProject.Models.Hotel> Hotel { get; set; }
     }
 }
