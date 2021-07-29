@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AsyncProject.Data;
 using Microsoft.EntityFrameworkCore;
+using AsyncProject.Models;
+using AsyncProject.Models.Interfaces;
+using AsyncProject.Models.Services;
 
 namespace AsyncProject
 {
@@ -31,7 +34,12 @@ namespace AsyncProject
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
-
+            // This maps the dependency (IHotel) to the correct service (HotelService); 
+            // "When you see IHotel, use HotelService
+            // Can swap out HotelService for anything.
+            services.AddTransient<IHotel, HotelService>();
+            services.AddTransient<IStudent, StudentService>();
+            services.AddMvc();
             services.AddControllers();
         }
 
@@ -49,6 +57,7 @@ namespace AsyncProject
 
             app.UseEndpoints(endpoints =>
             {
+                // Tells the system what method to run in controller.
                 endpoints.MapControllers();
                 endpoints.MapGet("/", async context =>
                 {

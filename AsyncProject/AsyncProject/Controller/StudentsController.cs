@@ -16,12 +16,12 @@ namespace AsyncProject.Controller
     {
         private readonly AsyncInnDbContext _context;
 
-        public StudentsController(AsyncInnDbContext context)
+        public StudentsController(IStudent student)
         {
-            _context = context;
+            _student = student;
         }
 
-        // GET: api/Students
+        // GET: api/Students - When doing an HTTPGet, 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
@@ -29,17 +29,11 @@ namespace AsyncProject.Controller
         }
 
         // GET: api/Students/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] // When you see this pattern within the controller, run this thing.
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return student;
+            Student student = await _student.GetStudents(id);
+            return OK(student);
         }
 
         // PUT: api/Students/5
@@ -47,30 +41,14 @@ namespace AsyncProject.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != student.Id)
+            if (id != Student.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            var UpdatedStudent = await _student.UpdateStudent(id, student);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StudentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(UpdatedStudent);
         }
 
         // POST: api/Students
@@ -78,9 +56,10 @@ namespace AsyncProject.Controller
         [HttpPost]
         public async Task<ActionResult<Student>> PostStudent(Student student)
         {
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            await _student.Create(student);
 
+            // Return a 201 Header to browser.
+            // The body of request will be us running GetStudent(id)
             return CreatedAtAction("GetStudent", new { id = student.Id }, student);
         }
 
@@ -88,16 +67,7 @@ namespace AsyncProject.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _student.Delete();
         }
 
         private bool StudentExists(int id)
