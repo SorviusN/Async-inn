@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AsyncProject.Data;
 using AsyncProject.Models;
+using AsyncProject.Models.Interfaces;
 
 namespace AsyncProject.Controller
 {
@@ -14,95 +15,55 @@ namespace AsyncProject.Controller
     [ApiController]
     public class AmenitiesController : ControllerBase
     {
-        private readonly AsyncInnDbContext _context;
+        private readonly IAmenity _amenity;
 
-        public AmenitiesController(AsyncInnDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET: api/Amenities
+        // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenity()
+        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
         {
-            return await _context.Amenities.ToListAsync();
+            // Count the list
+            var list = await _amenity.GetAmenities();
+            return Ok(list);
         }
 
-        // GET: api/Amenities/5
+        // GET: api/Rooms/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Amenity>> GetAmenity(int id)
         {
-            var amenity = await _context.Amenities.FindAsync(id);
-
-            if (amenity == null)
-            {
-                return NotFound();
-            }
-
+            // Awaiting a response from the service (service handles the extracting of the data from AsyncInn)
+            Amenity amenity = await _amenity.GetAmenity(id);
             return amenity;
         }
 
-        // PUT: api/Amenities/5
+        // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
+        public async Task<IActionResult> PutRoom(int id, Amenity amenity)
         {
             if (id != amenity.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(amenity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AmenityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var updatedAmenity = await _amenity.UpdateAmenity(id, amenity);
+            return Ok(updatedAmenity);
         }
 
-        // POST: api/Amenities
+        // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
+        public async Task<ActionResult<Amenity>> PostRoom(Amenity amenity)
         {
-            _context.Amenities.Add(amenity);
-            await _context.SaveChangesAsync();
+            await _amenity.Create(amenity);
 
-            return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
+            return CreatedAtAction("GetRoom", new { id = amenity.Id }, amenity);
         }
 
-        // DELETE: api/Amenities/5
+        // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAmenity(int id)
+        public async Task<IActionResult> DeleteRoom(int id)
         {
-            var amenity = await _context.Amenities.FindAsync(id);
-            if (amenity == null)
-            {
-                return NotFound();
-            }
-
-            _context.Amenities.Remove(amenity);
-            await _context.SaveChangesAsync();
-
+            await _amenity.Delete(id);
             return NoContent();
-        }
-
-        private bool AmenityExists(int id)
-        {
-            return _context.Amenities.Any(e => e.Id == id);
         }
     }
 }
