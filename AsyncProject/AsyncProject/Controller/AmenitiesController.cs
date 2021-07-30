@@ -25,14 +25,14 @@ namespace AsyncProject.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenity()
         {
-            return await _context.Amenity.ToListAsync();
+            return await _context.Amenities.ToListAsync();
         }
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Amenity>> GetAmenity(int id)
         {
-            var amenity = await _context.Amenity.FindAsync(id);
+            var amenity = await _context.Amenities.FindAsync(id);
 
             if (amenity == null)
             {
@@ -78,7 +78,7 @@ namespace AsyncProject.Controller
         [HttpPost]
         public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
         {
-            _context.Amenity.Add(amenity);
+            _context.Amenities.Add(amenity);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
@@ -88,13 +88,13 @@ namespace AsyncProject.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAmenity(int id)
         {
-            var amenity = await _context.Amenity.FindAsync(id);
+            var amenity = await _context.Amenities.FindAsync(id);
             if (amenity == null)
             {
                 return NotFound();
             }
 
-            _context.Amenity.Remove(amenity);
+            _context.Amenities.Remove(amenity);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace AsyncProject.Controller
 
         private bool AmenityExists(int id)
         {
-            return _context.Amenity.Any(e => e.Id == id);
+            return _context.Amenities.Any(e => e.Id == id);
         }
     }
 }

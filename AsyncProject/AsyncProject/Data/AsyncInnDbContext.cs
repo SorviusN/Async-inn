@@ -9,7 +9,6 @@ namespace AsyncProject.Data
 {
     public class AsyncInnDbContext : DbContext
     {
-        public DbSet<Student> Students { get; set; }
         public AsyncInnDbContext(DbContextOptions options) : base(options)
         {
         }
