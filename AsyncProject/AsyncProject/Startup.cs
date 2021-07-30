@@ -38,6 +38,8 @@ namespace AsyncProject
             // "When you see IHotel, use HotelService
             // Can swap out HotelService for anything.
             services.AddTransient<IHotel, HotelService>();
+            services.AddTransient<IRoom, RoomService>();
+            services.AddTransient<IAmenity, AmenityService>();
             services.AddMvc();
             services.AddControllers();
         }

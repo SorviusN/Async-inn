@@ -3,14 +3,16 @@ using AsyncProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncProject.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730004236_AddedHotelService")]
+    partial class AddedHotelService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,13 +33,6 @@ namespace AsyncProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Amenities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "TV"
-                        });
                 });
 
             modelBuilder.Entity("AsyncProject.Models.Hotel", b =>
@@ -113,20 +108,6 @@ namespace AsyncProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Layout = 2,
-                            Name = "Suite 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Layout = 1,
-                            Name = "Suite 2"
-                        });
                 });
 #pragma warning restore 612, 618
         }

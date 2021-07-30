@@ -9,7 +9,6 @@ namespace AsyncProject.Data
 {
     public class AsyncInnDbContext : DbContext
     {
-        public DbSet<Student> Students { get; set; }
         public AsyncInnDbContext(DbContextOptions options) : base(options)
         {
         }
@@ -41,6 +40,33 @@ namespace AsyncProject.Data
                     State = "Massachusetts",
                     Country = "USA",
                     Phone = "215-850-7772"
+                }
+            );
+            modelBuilder.Entity<Room>().HasData(
+                new Room
+                {
+                    Id = 1,
+                    Name = "Suite 1",
+                    Layout = 2
+                },
+                new Room
+                {
+                    Id = 2,
+                    Name = "Suite 2",
+                    Layout = 1
+                }
+            );
+
+            modelBuilder.Entity<Amenity>().HasData(
+                new Amenity
+                {
+                    Id = 1,
+                    Name = "TV"
+                },
+                new Amenity
+                {
+                    Id = 1,
+                    Name = "Sofa"
                 }
             );
         }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AsyncProject.Data;
 using AsyncProject.Models;
+using AsyncProject.Models.Interfaces;
 
 namespace AsyncProject.Controller
 {
@@ -14,31 +15,23 @@ namespace AsyncProject.Controller
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        private readonly AsyncInnDbContext _context;
-
-        public RoomsController(AsyncInnDbContext context)
-        {
-            _context = context;
-        }
+        private readonly IRoom _room;
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRoom()
+        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Room.ToListAsync();
+            // Count the list
+            var list = await _room.GetRooms();
+            return Ok(list);
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-
-            if (room == null)
-            {
-                return NotFound();
-            }
-
+            // Awaiting a response from the service (service handles the extracting of the data from AsyncInn)
+            Room room = await _room.GetRoom(id);
             return room;
         }
 
@@ -51,26 +44,8 @@ namespace AsyncProject.Controller
             {
                 return BadRequest();
             }
-
-            _context.Entry(room).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var updatedRoom = await _room.UpdateRoom(id, room);
+            return Ok(updatedRoom);
         }
 
         // POST: api/Rooms
@@ -78,8 +53,7 @@ namespace AsyncProject.Controller
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
-            _context.Room.Add(room);
-            await _context.SaveChangesAsync();
+            await _room.Create(room);
 
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
@@ -88,21 +62,8 @@ namespace AsyncProject.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            _context.Room.Remove(room);
-            await _context.SaveChangesAsync();
-
+            await _room.Delete(id);
             return NoContent();
-        }
-
-        private bool RoomExists(int id)
-        {
-            return _context.Room.Any(e => e.Id == id);
         }
     }
 }
