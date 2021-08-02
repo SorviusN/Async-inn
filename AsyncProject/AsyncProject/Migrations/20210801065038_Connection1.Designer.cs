@@ -3,35 +3,22 @@ using AsyncProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncProject.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210801065038_Connection1")]
+    partial class Connection1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AmenityRoom", b =>
-                {
-                    b.Property<int>("RoomAmenitiesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomAmenitiesId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoomAmenitiesId", "RoomAmenitiesId1");
-
-                    b.HasIndex("RoomAmenitiesId1");
-
-                    b.ToTable("AmenityRoom");
-                });
 
             modelBuilder.Entity("AsyncProject.Models.Amenity", b =>
                 {
@@ -164,36 +151,6 @@ namespace AsyncProject.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AsyncProject.Models.RoomAmenity", b =>
-                {
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AmenityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoomId", "AmenityId");
-
-                    b.HasIndex("AmenityId");
-
-                    b.ToTable("RoomAmenities");
-                });
-
-            modelBuilder.Entity("AmenityRoom", b =>
-                {
-                    b.HasOne("AsyncProject.Models.Amenity", null)
-                        .WithMany()
-                        .HasForeignKey("RoomAmenitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AsyncProject.Models.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomAmenitiesId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("AsyncProject.Models.HotelRoom", b =>
                 {
                     b.HasOne("AsyncProject.Models.Hotel", "Hotel")
@@ -209,25 +166,6 @@ namespace AsyncProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Hotel");
-
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("AsyncProject.Models.RoomAmenity", b =>
-                {
-                    b.HasOne("AsyncProject.Models.Amenity", "Amenity")
-                        .WithMany()
-                        .HasForeignKey("AmenityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AsyncProject.Models.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Amenity");
 
                     b.Navigation("Room");
                 });

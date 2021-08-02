@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AsyncProject.Models.Interfaces
 {
-    interface IRoom
+    public interface IRoom
     {
         // CREATE
         Task<Room> Create(Room room);
@@ -18,6 +18,10 @@ namespace AsyncProject.Models.Interfaces
 
         // UPDATE
         Task<Room> UpdateRoom(int id, Room room);
+
+        Task AddAmenityToRoom(int roomId, int amenityId);
+
+        //Task RemoveAmenityFromRoom(int roomId, int amenityId);
 
         // DELETE
         Task Delete(int id);
