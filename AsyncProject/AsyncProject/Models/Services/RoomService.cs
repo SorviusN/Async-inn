@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AsyncProject.Data;
 using AsyncProject.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 namespace AsyncProject.Models.Services
 {
     public class RoomService : IRoom
@@ -30,14 +31,49 @@ namespace AsyncProject.Models.Services
 
         public async Task<Room> GetRoom(int id)
         {
-            Room room = await _context.Rooms.FindAsync(id);
-            return room;
+            // LINQ - returns a specific hotel attached to the room.
+            return await _context.Rooms
+                                .Include(r => r.HotelRooms)
+                                .ThenInclude(hr => hr.Hotel)
+                                .FirstOrDefaultAsync(h => h.Id == id);
         }
 
         public async Task<List<Room>> GetRooms()
         {
-            var rooms = await _context.Rooms.ToListAsync();
-            return rooms;
+        // include all hotels that are attached to this room 
+        // Turn it into a list and return that list.
+            return await _context.Rooms
+                                .Include(r => r.HotelRooms)
+                                .ThenInclude(hr => hr.Hotel)
+                                .ToListAsync();
+        }
+
+        public async Task AddAmenityToRoom(int roomId,int amenityId)
+        {
+            RoomAmenity RoomAmenity = new RoomAmenity()
+            {
+                AmenityId = amenityId,
+                RoomId = roomId
+            };
+
+            _context.Entry(RoomAmenity).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveAmenityFromRoom(int roomId, int amenityId)
+        {
+            Room room = await GetRoom(roomId);
+            List<Amenity> ra = room.RoomAmenities;
+            for (int i = 0; i < ra.Count; i++)
+            {
+                if (ra[i].Id == amenityId)
+                {
+                    _context.Entry(ra[i]).State = EntityState.Deleted;
+                    await _context.SaveChangesAsync();
+                    break;
+                }
+            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Room> UpdateRoom(int id, Room room)
@@ -47,6 +83,7 @@ namespace AsyncProject.Models.Services
             return room;
         }
         // returning "Task" means that we will, in essence, return nothing (task is for async)
+
         public async Task Delete(int id)
         {
             Room room = await GetRoom(id);

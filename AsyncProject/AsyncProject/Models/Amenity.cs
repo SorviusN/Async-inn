@@ -9,5 +9,6 @@ namespace AsyncProject.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public List<Room> RoomAmenities { get; set; }
     }
 }

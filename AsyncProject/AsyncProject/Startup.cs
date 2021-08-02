@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
 using AsyncProject.Models.Services;
+
 
 namespace AsyncProject
 {
@@ -40,11 +42,11 @@ namespace AsyncProject
             services.AddTransient<IHotel, HotelService>();
             services.AddTransient<IRoom, RoomService>();
             services.AddTransient<IAmenity, AmenityService>();
-            services.AddMvc();
-            services.AddControllers();
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            //lambda expression - anonymous function, parameters before arrow.
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

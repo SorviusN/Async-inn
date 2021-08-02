@@ -17,6 +17,11 @@ namespace AsyncProject.Controller
     {
         private readonly IAmenity _amenity;
 
+        public AmenitiesController(IAmenity a)
+        {
+            _amenity = a;
+        }
+
         // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()

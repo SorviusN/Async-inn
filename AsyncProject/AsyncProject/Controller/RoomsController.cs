@@ -17,6 +17,12 @@ namespace AsyncProject.Controller
     {
         private readonly IRoom _room;
 
+        // We need a constructor with IRoom type for this class for security.
+        public RoomsController(IRoom r)
+        {
+            _room = r;
+        }
+
         // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
@@ -56,6 +62,14 @@ namespace AsyncProject.Controller
             await _room.Create(room);
 
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+        }
+
+        [HttpPost]
+        [Route("{roomId}/{amenityId}")]
+        public async Task<IActionResult> AddAmenityToRoom(int roomId, int amenityId)
+        {
+            await _room.AddAmenityToRoom(roomId, amenityId);
+            return NoContent(); 
         }
 
         // DELETE: api/Rooms/5

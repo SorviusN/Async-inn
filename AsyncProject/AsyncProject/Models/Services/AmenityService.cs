@@ -47,6 +47,7 @@ namespace AsyncProject.Models.Services
             return amenity;
         }
         // returning "Task" means that we will, in essence, return nothing (task is for async)
+
         public async Task Delete(int id)
         {
             Amenity amenity = await GetAmenity(id);

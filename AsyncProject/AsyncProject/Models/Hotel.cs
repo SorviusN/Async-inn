@@ -20,5 +20,6 @@ namespace AsyncProject.Models
         [Required]
         public string Country { get; set; }
         public string Phone { get; set; }
+        public List<HotelRoom> HotelRooms { get; set; }
     }
 }
