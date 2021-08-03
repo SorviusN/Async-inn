@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AsyncProject.Data;
+using AsyncProject.Models.DTO;
 using AsyncProject.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,16 @@ namespace AsyncProject.Models.Services
     public class RoomService : IRoom
     {
         private AsyncInnDbContext _context;
+        private IHotel _hotels;
 
-        // Below is dependency injection.
-        public RoomService(AsyncInnDbContext context)
+        // Below is dependency injection. We need context and hotelService.
+        public RoomService(AsyncInnDbContext context, IHotel hotelService)
         {
             // Constructor that gives a reference to the Database area "context"
             _context = context;
+            _hotels = hotelService;
         }
+
         async public Task<Room> Create(Room room)
         {
             // hotel is an instance of hotel 
@@ -29,13 +33,28 @@ namespace AsyncProject.Models.Services
             return room;
         }
 
-        public async Task<Room> GetRoom(int id)
+        public async Task<RoomDTO> GetRoom(int id)
         {
             // LINQ - returns a specific hotel attached to the room.
+            // Return a room dto instead of room.
+            // return await _context.Rooms
+            // .Include(r => r.HotelRooms)
+            // .ThenInclude(hr => hr.Hotel)
+            // .FirstOrDefaultAsync(h => h.Id == id);
+
+            // Casting
             return await _context.Rooms
-                                .Include(r => r.HotelRooms)
-                                .ThenInclude(hr => hr.Hotel)
-                                .FirstOrDefaultAsync(h => h.Id == id);
+                .Select(room => new RoomDTO
+                {
+                    ID = room.Id,
+                    Name = room.Name,
+                    Layout = room.Layout,
+                    Amenities = room.RoomAmenities
+                    .Select(t => new AmenityDTO
+                    {
+                        Name = t.Name
+                    }).ToList()
+                }).FirstOrDefaultAsync(r => r.ID == id);
         }
 
         public async Task<List<Room>> GetRooms()
@@ -86,7 +105,8 @@ namespace AsyncProject.Models.Services
 
         public async Task Delete(int id)
         {
-            Room room = await GetRoom(id);
+            // find a room by its specific ID.
+            Room room = await _context.Rooms.FindAsync(id);
             _context.Entry(room).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

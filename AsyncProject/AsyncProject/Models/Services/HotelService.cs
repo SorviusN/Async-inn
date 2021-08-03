@@ -12,6 +12,7 @@ namespace AsyncProject.Models.Services
     {
         private AsyncInnDbContext _context;
 
+
         // Below is dependency injection.
         public HotelService(AsyncInnDbContext context)
         {
@@ -51,6 +52,11 @@ namespace AsyncProject.Models.Services
                                 // room which matches the correct ID
                                 .FirstOrDefaultAsync(s => s.Id == id);
         }
+        public Task<Hotel> GetHotelByCode(string code)
+            {
+                throw new NotImplementedException();
+            }
+
 
         public async Task<List<Hotel>> GetHotels()
         {

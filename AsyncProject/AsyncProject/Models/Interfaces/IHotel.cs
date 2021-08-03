@@ -16,6 +16,8 @@ namespace AsyncProject.Models.Interfaces
         // GET 1 BY ID
         Task<Hotel> GetHotel(int id);
 
+        Task<Hotel> GetHotelByCode(string code);
+
         // UPDATE
         Task<Hotel> UpdateHotel(int id, Hotel hotel);
 
