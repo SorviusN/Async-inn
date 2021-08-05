@@ -26,23 +26,22 @@ namespace AsyncProject.Models.Services
         {
             // { Name, Course Code }
 
-            // Make new student
-            // Fetch course ID from course code.
-
+            // Make new Room 
+            // Fetch Name and Layout from inbound room.
             Room room = new Room()
             {
                 Name = inboundRoom.Name,
                 Layout = inboundRoom.Layout
             };
 
+            // Save to database
             _context.Entry(room).State = EntityState.Added;
             await _context.SaveChangesAsync();
 
-            // We now have room ID.
-            //Find the hotel that is associated with the room.
+            // Finding our correct hotel that is associated with the room.
             Hotel hotel = await _hotels.GetHotelByName(inboundRoom.HotelName);
             
-            //Connect room and hotel by ID with navigation properties table
+            //Connect room and hotel by ID with the hotels interface method AddRoom
             await _hotels.AddRoom(room.Id, hotel.Id);
 
             // Getting the room that was just added to the database from our inbound room (in which 
@@ -55,13 +54,12 @@ namespace AsyncProject.Models.Services
         public async Task<RoomDTO> GetRoom(int id)
         {
             // LINQ - returns a specific hotel attached to the room.
-            // Return a room dto instead of room.
             // return await _context.Rooms
             // .Include(r => r.HotelRooms)
             // .ThenInclude(hr => hr.Hotel)
             // .FirstOrDefaultAsync(h => h.Id == id);
 
-            // Casting
+            // Create new RoomDTO with same packaged properties as the room with specified ID.
             return await _context.Rooms
                 .Select(room => new RoomDTO
                 {
