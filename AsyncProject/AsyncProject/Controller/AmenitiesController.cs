@@ -25,7 +25,7 @@ namespace AsyncProject.Controller
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
             // Count the list
             var list = await _amenity.GetAmenities();
