@@ -14,3 +14,8 @@ Tables -
 - Rooms - 1 to many relationship with Async hotel, contains the different types of rooms.
 - Suite - 1 to 1 with relationship rooms, a room may be an empire suite, which has a location of Manhatttan (from location)
 - Amenities - 1 to many relationship with suites, as there would be a lot of different amenities per room. 
+
+## Data Transfer Objects
+-DTOs give you the ability to hide data from the client that they would not want/need. Think IDs and passwords for a database of usernames.  
+Additionally, New DTO classes give you the ability to write a simple object (A Hotel with a name, phone number and address) that would then parse out all of 
+the info into a regular non DTO class and store it into the database. This info is then returned to the client in the form of a DTO.

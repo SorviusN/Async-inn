@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncProject.Data;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
+using AsyncProject.Models.DTO;
 
 namespace AsyncProject.Controller
 {
@@ -24,7 +25,7 @@ namespace AsyncProject.Controller
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
             // Count the list
             var list = await _amenity.GetAmenities();
@@ -33,10 +34,11 @@ namespace AsyncProject.Controller
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<AmenityDTO>> GetAmenity(int id)
         {
             // Awaiting a response from the service (service handles the extracting of the data from AsyncInn)
-            Amenity amenity = await _amenity.GetAmenity(id);
+            AmenityDTO amenity = await _amenity.GetAmenity(id);
+
             return amenity;
         }
 
@@ -56,11 +58,11 @@ namespace AsyncProject.Controller
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Amenity>> PostRoom(Amenity amenity)
+        public async Task<ActionResult<AmenityDTO>> PostAmenity(NewAmenityDTO amenity)
         {
-            await _amenity.Create(amenity);
+            AmenityDTO newAmenity = await _amenity.Create(amenity);
 
-            return CreatedAtAction("GetRoom", new { id = amenity.Id }, amenity);
+            return CreatedAtAction("PostAmenity", new { id = newAmenity.ID } , newAmenity);
         }
 
         // DELETE: api/Rooms/5

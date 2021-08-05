@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncProject.Data;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
+using AsyncProject.Models.DTO;
 
 namespace AsyncProject.Controller
 {
@@ -25,8 +26,9 @@ namespace AsyncProject.Controller
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
+            // Currently returning list of rooms, but we want packaged up rooms.
             // Count the list
             var list = await _room.GetRooms();
             return Ok(list);
@@ -34,10 +36,11 @@ namespace AsyncProject.Controller
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
+            // THIS IS WHERE WE WANT TO CHANGE TO ROOMDTO.
             // Awaiting a response from the service (service handles the extracting of the data from AsyncInn)
-            Room room = await _room.GetRoom(id);
+            RoomDTO room = await _room.GetRoom(id);
             return room;
         }
 
@@ -57,11 +60,11 @@ namespace AsyncProject.Controller
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDTO>> PostRoom(NewRoomDTO room)
         {
-            await _room.Create(room);
+            RoomDTO newRoom = await _room.Create(room);
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            return CreatedAtAction("PostRoom", new { id = newRoom.ID }, newRoom);
         }
 
         [HttpPost]

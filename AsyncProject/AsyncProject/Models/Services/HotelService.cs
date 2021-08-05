@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AsyncProject.Models.DTO;
 
 namespace AsyncProject.Models.Services
 {
@@ -15,7 +16,7 @@ namespace AsyncProject.Models.Services
         // Below is dependency injection.
         public HotelService(AsyncInnDbContext context)
         {
-            // Constructor that 
+            // Constructor that injects the database for use in the service.
             _context = context;
         }
         async public Task<Hotel> Create(Hotel hotel)
@@ -29,38 +30,52 @@ namespace AsyncProject.Models.Services
             return hotel;
         }
 
-        public async Task<Hotel> GetHotel(int id)
+        public async Task<HotelDTO> GetHotel(int id)
         {
-            //Hotel hotel = await _context.Hotels.FindAsync(id);
-            //return hotel;
-
-            //Hotel hotel = await _context.Hotels.FindAsync(id);
-            //var hotelRooms = await _context.HotelRooms.Where(x => x.HotelId == id)
-            //                                        .Include(x => x.Room)
-            //                                        .ToListAsync();
-            //hotel.HotelRooms = hotelRooms;
-            //return hotel;
-
             //Mondo linq query
 
+            //return await _context.Hotels
+            //                    // First include just hotelrooms
+            //                    .Include(s => s.HotelRooms)
+            //                    // then every room in hotel rooms
+            //                    .ThenInclude(e => e.Room)
+            //                    // room which matches the correct ID
+            //                    .FirstOrDefaultAsync(s => s.Id == id);
             return await _context.Hotels
-                                // First include just hotelrooms
-                                .Include(s => s.HotelRooms)
-                                // then every room in hotel rooms
-                                .ThenInclude(e => e.Room)
-                                // room which matches the correct ID
-                                .FirstOrDefaultAsync(s => s.Id == id);
+                .Select(hotel => new HotelDTO
+                {
+                    ID = hotel.Id,
+                    Name = hotel.Name,
+                    City = hotel.City,
+                    Rooms = hotel.HotelRooms
+                    .Select(h => new HotelRoomDTO
+                    {
+                        Room = h.Room.Name
+                    }).ToList()
+                }).FirstOrDefaultAsync(r => r.ID == id);
         }
+        public async Task<Hotel> GetHotelByName(string name)
+            {
+            return await _context.Hotels
+                .Include(a => a.HotelRooms)
+                .ThenInclude(b => b.Room)
+                .FirstOrDefaultAsync(m => m.Name == name);
+            }
 
-        public async Task<List<Hotel>> GetHotels()
+        public async Task<List<HotelDTO>> GetHotels()
         {
             return await _context.Hotels
-                                // specifically hotel rooms in hotel
-                                // Then the room part of the nav property
-                                // then put it to a list and return.
-                                .Include(h => h.HotelRooms)
-                                .ThenInclude(hr => hr.Room)
-                                .ToListAsync();
+                .Select(hotel => new HotelDTO
+                {
+                    ID = hotel.Id,
+                    Name = hotel.Name,
+                    City = hotel.City,
+                    Rooms = hotel.HotelRooms
+                    .Select(h => new HotelRoomDTO
+                    {
+                        Room = h.Room.Name
+                    }).ToList()
+                }).ToListAsync();
         }
 
         public async Task<Hotel> UpdateHotel(int id, Hotel hotel)
@@ -72,8 +87,20 @@ namespace AsyncProject.Models.Services
         // returning "Task" means that we will, in essence, return nothing (task is for async)
         public async Task Delete(int id)
         {
-            Hotel hotel = await GetHotel(id);
+            Hotel hotel = await _context.Hotels.FindAsync();
             _context.Entry(hotel).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddRoom(int roomId, int hotelId)
+        {
+            HotelRoom hotelRoom = new HotelRoom()
+            {
+                RoomId = roomId,
+                HotelId = hotelId
+            };
+
+            _context.Entry(hotelRoom).State = EntityState.Added;
             await _context.SaveChangesAsync();
         }
     }

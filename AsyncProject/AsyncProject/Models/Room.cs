@@ -11,7 +11,10 @@ namespace AsyncProject.Models
         public string Name { get; set; }
         //Studio is 0, One Bedroom is 1, Two bedroom is 2 for the layout number
         public int Layout { get; set; }
-        public List<HotelRoom> HotelRooms { get; set; }
+
+        // Nav Properties
+        public List<HotelRoom> Hotels { get; set; }
         public List<Amenity> RoomAmenities { get; set; }
+
     }
 }
