@@ -87,15 +87,3 @@ namespace AsyncProject.Data
     }
 }
 
-            //modelBuilder.Entity<Amenity>().HasData(
-        //        new Amenity
-            //    {
-            //        Id = 1,
-            //        Name = "TV"
-            //    },
-            //    new Amenity
-            //    {
-            //        Id = 1,
-            //        Name = "Sofa"
-            //    }
-            //);

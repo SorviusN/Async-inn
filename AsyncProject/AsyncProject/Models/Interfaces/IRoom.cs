@@ -9,10 +9,10 @@ namespace AsyncProject.Models.Interfaces
     public interface IRoom
     {
         // CREATE
-        Task<Room> Create(Room room);
+        Task<RoomDTO> Create(NewRoomDTO room);
 
         // GET ALL
-        Task<List<Room>> GetRooms();
+        Task<List<RoomDTO>> GetRooms();
 
         // GET 1 BY ID
         Task<RoomDTO> GetRoom(int id);
@@ -22,7 +22,7 @@ namespace AsyncProject.Models.Interfaces
 
         Task AddAmenityToRoom(int roomId, int amenityId);
 
-        //Task RemoveAmenityFromRoom(int roomId, int amenityId);
+        Task RemoveAmenityFromRoom(int roomId, int amenityId);
 
         // DELETE
         Task Delete(int id);

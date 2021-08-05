@@ -60,11 +60,11 @@ namespace AsyncProject.Controller
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDTO>> PostRoom(NewRoomDTO room)
         {
-            await _room.Create(room);
+            RoomDTO newRoom = await _room.Create(room);
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            return CreatedAtAction("PostRoom", new { id = newRoom.ID }, newRoom);
         }
 
         [HttpPost]

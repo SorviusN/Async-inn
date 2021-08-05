@@ -14,8 +14,8 @@ namespace AsyncProject.Models.Interfaces
 
         // Nav Properties
         // Specifies our linkages between the tables
-        public Hotel hotel { get; set; }
-        public Room room { get; set; }
+        public Hotel Hotel { get; set; }
+        public Room Room { get; set; }
 
     }
 }

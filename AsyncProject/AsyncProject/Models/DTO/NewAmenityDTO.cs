@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace AsyncProject.Models.DTO
 {
-    public class NewRoomDTO
+    public class NewAmenityDTO
     {
         public string Name { get; set; }
-        public int Layout { get; set; }
-        public string HotelName { get; set; }
     }
 }

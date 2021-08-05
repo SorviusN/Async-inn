@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncProject.Data;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
+using AsyncProject.Models.DTO;
 
 namespace AsyncProject.Controller
 {
@@ -33,9 +34,9 @@ namespace AsyncProject.Controller
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
-            Hotel hotel = await _hotel.GetHotel(id);
+            HotelDTO hotel = await _hotel.GetHotel(id);
             return hotel;
         }
 
@@ -66,7 +67,7 @@ namespace AsyncProject.Controller
             //inside of body.
             await _hotel.Create(hotel);
 
-            // what is this?? Who knows
+            // Creates a hotel and adds an ID to it.
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
 

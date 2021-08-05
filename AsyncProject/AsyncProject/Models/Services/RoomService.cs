@@ -15,22 +15,41 @@ namespace AsyncProject.Models.Services
         private IHotel _hotels;
 
         // Below is dependency injection. We need context and hotelService.
-        public RoomService(AsyncInnDbContext context, IHotel hotelService)
+        public RoomService(AsyncInnDbContext context, IHotel hotelService, IAmenity amenityService)
         {
             // Constructor that gives a reference to the Database area "context"
             _context = context;
             _hotels = hotelService;
         }
 
-        async public Task<Room> Create(Room room)
+        async public Task<RoomDTO> Create(NewRoomDTO inboundRoom)
         {
-            // hotel is an instance of hotel 
-            // the current state of hotel object: raw
+            // { Name, Course Code }
+
+            // Make new student
+            // Fetch course ID from course code.
+
+            Room room = new Room()
+            {
+                Name = inboundRoom.Name,
+                Layout = inboundRoom.Layout
+            };
 
             _context.Entry(room).State = EntityState.Added;
-
             await _context.SaveChangesAsync();
-            return room;
+
+            // We now have room ID.
+            //Find the hotel that is associated with the room.
+            Hotel hotel = await _hotels.GetHotelByName(inboundRoom.HotelName);
+            
+            //Connect room and hotel by ID with navigation properties table
+            await _hotels.AddRoom(room.Id, hotel.Id);
+
+            // Getting the room that was just added to the database from our inbound room (in which 
+            // we converted to room)
+            RoomDTO addedRoom = await GetRoom(room.Id);
+
+            return addedRoom;
         }
 
         public async Task<RoomDTO> GetRoom(int id)
@@ -57,14 +76,27 @@ namespace AsyncProject.Models.Services
                 }).FirstOrDefaultAsync(r => r.ID == id);
         }
 
-        public async Task<List<Room>> GetRooms()
+        public async Task<List<RoomDTO>> GetRooms()
         {
-        // include all hotels that are attached to this room 
-        // Turn it into a list and return that list.
+            // include all hotels that are attached to this room 
+            // Turn it into a list and return that list.
+
+            //return await _context.Rooms
+            //                    .Include(r => r.HotelRooms)
+            //                    .ThenInclude(hr => hr.Hotel)
+            //                    .ToListAsync();
             return await _context.Rooms
-                                .Include(r => r.HotelRooms)
-                                .ThenInclude(hr => hr.Hotel)
-                                .ToListAsync();
+                .Select(room => new RoomDTO
+                {
+                    ID = room.Id,
+                    Name = room.Name,
+                    Layout = room.Layout,
+                    Amenities = room.RoomAmenities
+                    .Select(t => new AmenityDTO
+                    {
+                        Name = t.Name
+                    }).ToList()
+                }).ToListAsync();
         }
 
         public async Task AddAmenityToRoom(int roomId,int amenityId)
@@ -81,7 +113,7 @@ namespace AsyncProject.Models.Services
 
         public async Task RemoveAmenityFromRoom(int roomId, int amenityId)
         {
-            Room room = await GetRoom(roomId);
+            Room room = await _context.Rooms.FindAsync(roomId);
             List<Amenity> ra = room.RoomAmenities;
             for (int i = 0; i < ra.Count; i++)
             {
@@ -108,6 +140,7 @@ namespace AsyncProject.Models.Services
             // find a room by its specific ID.
             Room room = await _context.Rooms.FindAsync(id);
             _context.Entry(room).State = EntityState.Deleted;
+            // save the changes.
             await _context.SaveChangesAsync();
         }
     }

@@ -7,5 +7,9 @@ namespace AsyncProject.Models.DTO
 {
     public class HotelRoomDTO
     {
+        public int ID { get; set; }
+        public string Room { get; set; }
+
+        public string Hotel { get; set; }
     }
 }
