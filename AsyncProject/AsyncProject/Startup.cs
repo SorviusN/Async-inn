@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
 using AsyncProject.Models.Services;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncProject
 {
@@ -36,12 +36,21 @@ namespace AsyncProject
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+
+            //Adding the identity - this is boilerplate.
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                //Other options are possible for this ApplicationUser model.
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AsyncInnDbContext>();
+
             // This maps the dependency (IHotel) to the correct service (HotelService); 
             // "When you see IHotel, use HotelService
             // Can swap out HotelService for anything.
             services.AddTransient<IHotel, HotelService>();
             services.AddTransient<IRoom, RoomService>();
             services.AddTransient<IAmenity, AmenityService>();
+            services.AddTransient<IUser, IdentityUserService>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
             //lambda expression - anonymous function, parameters before arrow.

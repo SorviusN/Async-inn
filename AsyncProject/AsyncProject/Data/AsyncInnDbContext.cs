@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AsyncProject.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AsyncProject.Data
 {
-    public class AsyncInnDbContext : DbContext
+    public class AsyncInnDbContext : IdentityDbContext<ApplicationUser> // Old way: DbContext
     {
         public AsyncInnDbContext(DbContextOptions options) : base(options)
         {
@@ -20,10 +21,12 @@ namespace AsyncProject.Data
         public DbSet<HotelRoom> HotelRooms { get; set; } 
         public DbSet<RoomAmenity> RoomAmenities { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // This call the base method, but does nothing.
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); // Similar to super from REACT
+
             modelBuilder.Entity<Hotel>().HasData(
             new Hotel
             {
