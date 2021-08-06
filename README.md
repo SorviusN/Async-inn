@@ -19,3 +19,18 @@ Tables -
 -DTOs give you the ability to hide data from the client that they would not want/need. Think IDs and passwords for a database of usernames.  
 Additionally, New DTO classes give you the ability to write a simple object (A Hotel with a name, phone number and address) that would then parse out all of 
 the info into a regular non DTO class and store it into the database. This info is then returned to the client in the form of a DTO.
+
+## User Role Information
+This section will explain the process of Login and Registration via the API. The main parts are:  
+- Application User (Model) - Will hold user name and password information. Implements the IdentityUser interface which gives it all of the necessary tasks to handle a user inside of a database.
+<br>
+<br>
+- Users Controller - Handles the routes for the Application user. Uses Post for both login and register. Injects IUser interface methods to be used with the IdentityUserService.
+<br>
+<br>
+- Identity User Service - Acting as the one "Making the burger", the service receives the data given by the controller and performs all of the necessary operations with the database. In the case of the user service registration process it takes the data creates a new application user model from it. It then returns a new UserDTO if all went well. If there is an error with any of the fields, it is displayed as needed.  
+<br>
+- IUser (Interface) - holds the login and registration function. This is implemented by the Identity User Service.
+<br>
+<br>
+- DTOs - These are packaged versions of the Login, User and RegisterUser classes which give some simple fields to fill in on the API side. These DTOs are used for both input and output this time around, however this is not considered best practice in most applications.
