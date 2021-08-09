@@ -9,6 +9,7 @@ using AsyncProject.Data;
 using AsyncProject.Models;
 using AsyncProject.Models.Interfaces;
 using AsyncProject.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncProject.Controller
 {
@@ -46,6 +47,7 @@ namespace AsyncProject.Controller
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Policy = "updateRoom")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
@@ -59,6 +61,7 @@ namespace AsyncProject.Controller
 
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Policy = "createRoom")]
         [HttpPost]
         public async Task<ActionResult<RoomDTO>> PostRoom(NewRoomDTO room)
         {
@@ -67,6 +70,7 @@ namespace AsyncProject.Controller
             return CreatedAtAction("PostRoom", new { id = newRoom.ID }, newRoom);
         }
 
+        [Authorize(Policy = "updateRoom")]
         [HttpPost]
         [Route("{roomId}/{amenityId}")]
         public async Task<IActionResult> AddAmenityToRoom(int roomId, int amenityId)
