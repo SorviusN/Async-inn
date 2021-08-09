@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AsyncProject.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncProject.Data
 {
@@ -27,6 +28,7 @@ namespace AsyncProject.Data
             // This call the base method, but does nothing.
             base.OnModelCreating(modelBuilder); // Similar to super from REACT
 
+            // Seeding data for SQL
             modelBuilder.Entity<Hotel>().HasData(
             new Hotel
             {
@@ -76,6 +78,19 @@ namespace AsyncProject.Data
                 }
             );
 
+            // Tacks anything after the first two parameters into a string array via the params type in
+            // parameter declarations of SeedRole function
+            SeedRole(modelBuilder, "District Manager", "createRoom", "createAmenity", "createHotel"
+                                , "updateRoom", "udpateAmenity", "updateHotel"
+                                , "deletRoom", "deleteAmenity", "deleteHotel"
+                );
+
+            SeedRole(modelBuilder, "Property Manager", "createRoom", "createAmenity",
+                                    "updateRoom", "updateAmenity",
+                                    "deleteAmenity");
+
+            SeedRole(modelBuilder, "Agent", "createAmenity", "updateRoom", "updateAmenity", "deleteAmenity");
+
             modelBuilder.Entity<HotelRoom>().HasKey(
                 // for every hotel room, create a new foreign key for both hotel and room.
                 hotelRoom => new { hotelRoom.RoomId, hotelRoom.HotelId }
@@ -86,6 +101,34 @@ namespace AsyncProject.Data
                 // for every hotel room, create a new foreign key for both hotel and room.
                 roomAmenity => new { roomAmenity.RoomId, roomAmenity.AmenityId }
             );
+        }
+
+        public void SeedRole(ModelBuilder modelBuilder, string roleName, params string[] permission)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString()
+            };
+
+            // Creating an entity of type Identity role that stores data.
+            modelBuilder.Entity<IdentityRole>().HasData(role);
+
+            var roleClaims = permission.Select(permission =>
+                // assigning all of the values that we set up in Startup.cs
+                new IdentityRoleClaim<string>
+                {
+                    Id = 1,
+                    RoleId = role.Id,
+                    ClaimType = "permissions",
+                    ClaimValue = permission
+                }
+            ).ToArray();
+
+            // Assigning the role claims to the role.
+            modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(roleClaims);
         }
     }
 }

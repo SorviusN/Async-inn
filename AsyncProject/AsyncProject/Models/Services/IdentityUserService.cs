@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AsyncProject.Models.Services
@@ -14,11 +15,13 @@ namespace AsyncProject.Models.Services
 
         // Allows us to get into the specifics of identity with the user.
         private UserManager<ApplicationUser> userManager;
-
-        //dependency injection - injecting userManager (application user model)
-        public IdentityUserService(UserManager<ApplicationUser> manager)
+        private JwtTokenService tokenService;
+        //dependency injection - injecting userManager (application user model) as well as the jwtTokenService.
+        public IdentityUserService(UserManager<ApplicationUser> manager, JwtTokenService jwtTokenService)
         {
+            // Injecting dependency of the user management, which is of type ApplicationUser (model)
             userManager = manager;
+            tokenService = jwtTokenService;
         }
 
         public async Task<UserDTO> Login(string username, string password)
@@ -33,7 +36,11 @@ namespace AsyncProject.Models.Services
                 return new UserDTO
                 {
                     Id = user.Id,
-                    Username = user.UserName
+                    Username = user.UserName,
+
+                    // Retreiving a token from the token service and entering in the User, as well as the time frame
+                    // that the token is valid for.
+                    Token = await tokenService.GetTokenAsync(user, TimeSpan.FromMinutes(20))
                 };
             }
 
@@ -56,11 +63,16 @@ namespace AsyncProject.Models.Services
 
             if (result.Succeeded)
             {
+                // Adding all of the necessary roles to the user that was created, based on the DTO data.
+                await userManager.AddToRolesAsync(user, data.Roles);
+
                 // return new DTO from ApplicationUser that was created 
                 return new UserDTO
                 {
                     Id = user.Id,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Token = await tokenService.GetTokenAsync(user, TimeSpan.FromMinutes(20)),
+                    Roles = await userManager.GetRolesAsync(user)
                 };
             }
 
@@ -69,7 +81,7 @@ namespace AsyncProject.Models.Services
             foreach(var error in result.Errors)
             {
                 // Model state will be an object, where the key will be password, email, userName
-                // and the error messages will be the error messages.
+                // and the error messages will be the error messages. ternary statements
                 var errorKey =
                     error.Code.Contains("Password") ? nameof(data.Password) :
                     error.Code.Contains("Email") ? nameof(data.Email) :
@@ -81,6 +93,17 @@ namespace AsyncProject.Models.Services
             }
 
             return null;
+        }
+
+        public async Task<UserDTO> GetUserAsync(ClaimsPrincipal principal)
+        {
+            //retreiving a specific user from the principal that we input.
+            var user = await userManager.GetUserAsync(principal);
+            return new UserDTO
+            {
+                Id = user.Id,
+                Username = user.UserName
+            };
         }
     }
 }

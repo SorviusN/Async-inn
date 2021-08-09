@@ -1,5 +1,6 @@
 ﻿using AsyncProject.Models.DTO;
 using AsyncProject.Models.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,12 +25,12 @@ namespace AsyncProject.Controller
         }
 
         // Routes
-
-        [HttpPost("Register)")]
+        [Authorize(Roles ="District Manager")]
+        [HttpPost("register)")]
         public async Task<ActionResult<UserDTO>> Register(RegisterUserDTO data)
         {
             // Passing in the model state - if there is a problem with the model state we will change it
-            // to invalid and have that reflect in the code.
+            // to invalid in the service and have that reflect in the user var
             var user = await _userService.Register(data, this.ModelState);
             if (ModelState.IsValid) return user;
 
@@ -37,7 +38,8 @@ namespace AsyncProject.Controller
             return BadRequest(new ValidationProblemDetails(ModelState));
         }
 
-        [HttpPost("Login")]
+        [Authorize]
+        [HttpPost("login")]
         // Creating a login session for the user.
         public async Task<ActionResult<UserDTO>> Login(LoginDTO data)
         {
@@ -47,6 +49,13 @@ namespace AsyncProject.Controller
             if (userLogin == null) return Unauthorized();
 
             return userLogin;
+        }
+
+        [Authorize] // [Authorize(Role="District Manager")] ... [Authorize(Policy="create)]
+        [HttpGet("me")]
+        public async Task<ActionResult<UserDTO>> Me()
+        {
+            return await _userService.GetUserAsync(this.User);
         }
     }
 
