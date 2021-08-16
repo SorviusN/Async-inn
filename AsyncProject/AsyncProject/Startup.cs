@@ -41,6 +41,7 @@ namespace AsyncProject
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AsyncInnDbContext>();
 
+            // Creates all of the necessary parameters for token authentication
             services.AddAuthentication(options =>
             {
                 // 

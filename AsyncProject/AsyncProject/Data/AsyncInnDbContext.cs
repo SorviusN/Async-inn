@@ -14,6 +14,7 @@ namespace AsyncProject.Data
         public AsyncInnDbContext(DbContextOptions options) : base(options)
         {
         }
+
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
@@ -25,7 +26,7 @@ namespace AsyncProject.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // This call the base method, but does nothing.
+            // This call the base method, but does nothing to the DB itself
             base.OnModelCreating(modelBuilder); // Similar to super from REACT
 
             // Seeding data for SQL
@@ -51,6 +52,7 @@ namespace AsyncProject.Data
                 Phone = "215-850-7772"
             }
             );
+
             modelBuilder.Entity<Room>().HasData(
                 new Room
                 {
@@ -65,6 +67,7 @@ namespace AsyncProject.Data
                     Layout = 1
                 }
             );
+
             modelBuilder.Entity<Amenity>().HasData(
                 new Amenity
                 {

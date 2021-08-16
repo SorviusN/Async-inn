@@ -66,7 +66,6 @@ namespace AsyncProject.Controller
         public async Task<ActionResult<RoomDTO>> PostRoom(NewRoomDTO room)
         {
             RoomDTO newRoom = await _room.Create(room);
-
             return CreatedAtAction("PostRoom", new { id = newRoom.ID }, newRoom);
         }
 
