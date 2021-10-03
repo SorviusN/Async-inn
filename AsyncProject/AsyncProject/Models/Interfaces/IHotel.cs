@@ -14,11 +14,11 @@ namespace AsyncProject.Models.Interfaces
         // GET ALL
         Task<List<HotelDTO>> GetHotels();
 
-        // GET 1 BY ID
+        // GET HOTEL BY ID
         Task<HotelDTO> GetHotel(int id);
 
+        // GET HOTEL BY NAME INSTEAD
         Task<Hotel> GetHotelByName(string name);
-
         // UPDATE
         Task<Hotel> UpdateHotel(int id, Hotel hotel);
 

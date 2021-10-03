@@ -12,7 +12,7 @@ namespace AsyncProject.Data
     public class AsyncInnDbContext : IdentityDbContext<ApplicationUser> // Old way: DbContext
     {
         public AsyncInnDbContext(DbContextOptions options) : base(options)
-        {
+        { 
         }
 
         public DbSet<Hotel> Hotels { get; set; }
@@ -23,13 +23,13 @@ namespace AsyncProject.Data
         public DbSet<HotelRoom> HotelRooms { get; set; } 
         public DbSet<RoomAmenity> RoomAmenities { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // This call the base method, but does nothing to the DB itself
+            //This call the base method, but does nothing to the DB itself
             base.OnModelCreating(modelBuilder); // Similar to super from REACT
 
-            // Seeding data for SQL
+            //Seeding data for SQL
+
             modelBuilder.Entity<Hotel>().HasData(
             new Hotel
             {
@@ -51,7 +51,7 @@ namespace AsyncProject.Data
                 Country = "USA",
                 Phone = "215-850-7772"
             }
-            );
+             );
 
             modelBuilder.Entity<Room>().HasData(
                 new Room
@@ -78,6 +78,11 @@ namespace AsyncProject.Data
                 {
                     Id = 2,
                     Name = "Sofa"
+                },
+                new Amenity
+                {
+                    Id = 3,
+                    Name = "Coffee Table"
                 }
             );
 
@@ -98,7 +103,6 @@ namespace AsyncProject.Data
                 // for every hotel room, create a new foreign key for both hotel and room.
                 hotelRoom => new { hotelRoom.RoomId, hotelRoom.HotelId }
             );
-
 
             modelBuilder.Entity<RoomAmenity>().HasKey(
                 // for every hotel room, create a new foreign key for both hotel and room.
@@ -123,7 +127,7 @@ namespace AsyncProject.Data
                 // assigning all of the values that we set up in Startup.cs
                 new IdentityRoleClaim<string>
                 {
-                    Id = 1,
+                    Id = 3,
                     RoleId = role.Id,
                     ClaimType = "permissions",
                     ClaimValue = permission
