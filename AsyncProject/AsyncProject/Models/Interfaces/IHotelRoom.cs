@@ -16,7 +16,6 @@ namespace AsyncProject.Models.Interfaces
         // Specifies our linkages between the tables
         public Hotel Hotel { get; set; }
         public Room Room { get; set; }
-
     }
 }
 

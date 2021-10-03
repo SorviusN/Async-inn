@@ -39,7 +39,6 @@ namespace AsyncProject.Controller
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
-            // THIS IS WHERE WE WANT TO CHANGE TO ROOMDTO.
             // Awaiting a response from the service (service handles the extracting of the data from AsyncInn)
             RoomDTO room = await _room.GetRoom(id);
             return room;
@@ -66,7 +65,6 @@ namespace AsyncProject.Controller
         public async Task<ActionResult<RoomDTO>> PostRoom(NewRoomDTO room)
         {
             RoomDTO newRoom = await _room.Create(room);
-
             return CreatedAtAction("PostRoom", new { id = newRoom.ID }, newRoom);
         }
 
@@ -83,6 +81,7 @@ namespace AsyncProject.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
+            // asynchronously find the correct room associated with the id.
             await _room.Delete(id);
             return NoContent();
         }

@@ -19,6 +19,7 @@ namespace AsyncProject.Models.Services
             // Constructor that injects the database for use in the service.
             _context = context;
         }
+
         async public Task<Hotel> Create(Hotel hotel)
         {
             // hotel is an instance of hotel 

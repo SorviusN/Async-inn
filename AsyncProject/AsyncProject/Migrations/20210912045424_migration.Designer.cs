@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AsyncProject.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    [Migration("20210805091301_IdentityFramework")]
-    partial class IdentityFramework
+    [Migration("20210912045424_migration")]
+    partial class migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,18 +49,6 @@ namespace AsyncProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Amenities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "TV"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Sofa"
-                        });
                 });
 
             modelBuilder.Entity("AsyncProject.Models.ApplicationUser", b =>
@@ -161,28 +149,6 @@ namespace AsyncProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Hotels");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Cleveland",
-                            Country = "USA",
-                            Name = "Async Inn",
-                            Phone = "859-225-0283",
-                            State = "Ohio",
-                            StreetAddress = "3211 West Boulevard"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Boston",
-                            Country = "USA",
-                            Name = "Async Inn Plus",
-                            Phone = "215-850-7772",
-                            State = "Massachusetts",
-                            StreetAddress = "10 Allston Street"
-                        });
                 });
 
             modelBuilder.Entity("AsyncProject.Models.HotelRoom", b =>
@@ -216,20 +182,6 @@ namespace AsyncProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Layout = 2,
-                            Name = "Suite 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Layout = 1,
-                            Name = "Suite 2"
-                        });
                 });
 
             modelBuilder.Entity("AsyncProject.Models.RoomAmenity", b =>

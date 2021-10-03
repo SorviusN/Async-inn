@@ -31,7 +31,7 @@ namespace AsyncProject
             services.AddDbContext<AsyncInnDbContext>(options => {
                 // Our DATABASE_URL from js days
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
             });
 
             //Adding the identity - this is boilerplate.
@@ -41,6 +41,7 @@ namespace AsyncProject
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AsyncInnDbContext>();
 
+            // Creates all of the necessary parameters for token authentication
             services.AddAuthentication(options =>
             {
                 // 
@@ -71,7 +72,6 @@ namespace AsyncProject
                 options.AddPolicy("createAmenity", policy => policy.RequireClaim("permissions", "createAmenity"));
                 options.AddPolicy("updateAmenity", policy => policy.RequireClaim("permissions", "updateAmenity"));
                 options.AddPolicy("deleteAmenity", policy => policy.RequireClaim("permissions", "deleteAmenity"));
-
             });
 
             // This maps the dependency (IHotel) to the correct service (HotelService); 
@@ -106,7 +106,7 @@ namespace AsyncProject
                 endpoints.MapControllers();
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Welcome to the Async Inn.");
+                    await context.Response.WriteAsync("Welcome to the Async Inn. This is a back end database.");
                 });
             });
         }

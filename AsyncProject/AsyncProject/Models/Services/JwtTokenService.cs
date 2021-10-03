@@ -43,7 +43,7 @@ namespace AsyncProject.Models.Services
             {
                 ValidateIssuerSigningKey = true,
                 // This is main goal: Make sure the security key, which comes config is valid.
-                IssuerSigningKey = GetSecurityKey(configuration), // this is the actual keypart.
+                IssuerSigningKey = GetSecurityKey(configuration), // this is the actual key part.
                 
                 // for testing
                 ValidateIssuer = false,

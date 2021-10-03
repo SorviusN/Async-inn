@@ -15,6 +15,5 @@ namespace AsyncProject.Models
         // Nav Properties
         public List<HotelRoom> Hotels { get; set; }
         public List<Amenity> RoomAmenities { get; set; }
-
     }
 }

@@ -22,6 +22,7 @@ namespace AsyncProject.Models.Services
             _hotels = hotelService;
         }
 
+        // Passing in cart information via newDTO.
         async public Task<RoomDTO> Create(NewRoomDTO inboundRoom)
         {
             // { Name, Course Code }
@@ -66,7 +67,7 @@ namespace AsyncProject.Models.Services
                     ID = room.Id,
                     Name = room.Name,
                     Layout = room.Layout,
-                    Amenities = room.RoomAmenities
+                    Amenities = room.RoomAmenities //  selecting every amenity associated with specific room
                     .Select(t => new AmenityDTO
                     {
                         Name = t.Name
@@ -83,6 +84,7 @@ namespace AsyncProject.Models.Services
             //                    .Include(r => r.HotelRooms)
             //                    .ThenInclude(hr => hr.Hotel)
             //                    .ToListAsync();
+
             return await _context.Rooms
                 .Select(room => new RoomDTO
                 {
