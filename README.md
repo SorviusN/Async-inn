@@ -34,3 +34,4 @@ This section will explain the process of Login and Registration via the API. The
 <br>
 <br>
 - DTOs - These are packaged versions of the Login, User and RegisterUser classes which give some simple fields to fill in on the API side. These DTOs are used for both input and output this time around, however this is not considered best practice in most applications.
+- NEWDTO - An unofficial term for the INCOMING dto vs the outgoing dto. In a perfect world they will be separate things - for instance when someone creates an account as a user they will need to enter a username, password but our program will generate a key for them along with their other info into the SQL database.
